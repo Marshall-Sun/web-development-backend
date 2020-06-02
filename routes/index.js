@@ -6,14 +6,14 @@ var connection = require("./mysql");
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 
-  var sql = "SELECT * FROM websites";
-  //查
-  connection.query(sql, function (err, result) {
-    if (err) {
-      console.log("[SELECT ERROR] - ", err.message);
-      return;
-    }
-    console.log(result);
+  getWebsites = () => {
+    return new Promise((res) => {
+      connection.query("SELECT * FROM websites", (err, data) => res(data));
+    });
+  };
+
+  getWebsites().then((results) => {
+    console.log(results);
   });
 
   connection.end();
