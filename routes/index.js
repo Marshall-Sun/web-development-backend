@@ -8,12 +8,17 @@ router.get("/", function (req, res, next) {
 
   getWebsites = () => {
     return new Promise((res) => {
-      connection.query("SELECT * FROM websites", (err, data) => res(data));
+      connection.query("SELECT * FROM websites", (err, data) => {
+        if (err) reject(err);
+        res(data);
+      });
     });
   };
 
   getWebsites().then((results) => {
-    console.log(results);
+    for (const item of results) {
+      console.log(item.name);
+    }
   });
 
   connection.end();
