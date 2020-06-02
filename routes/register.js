@@ -1,35 +1,52 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var userList = require('./userList');
-
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a register");
-});
+var connection = require("./mysql");
 
 router.post("/info", (req, res) => {
-  var exist = false, curUser;
-  for (const item of userList) {
-    if (req.body.email == item.email) {
-      exist = true;
-    }
-  }
+  var exist = false;
 
-  if (!exist) {
-    let lastid =
-      parseInt(userList[userList.length - 1].id.split("U")[1]) + 1 + "";
-    curUser = {
-      id: "U" + lastid.padStart(3, "0"),
-      email: req.body.email,
-      password: req.body.password,
-      nickname: req.body.nickname,
-      data: [],
-    };
+  getEmail = () => {
+    return new Promise((res) => {
+      connection.query("SELECT email FROM user", (err, data) => {
+        if (err) console.log(err);
+        res(data);
+      });
+    });
+  };
 
-    userList.push(curUser);
-  }
+  addUser = (email, password, nickname) => {
+    return new Promise((res) => {
+      connection.query(
+        "ALTER TABLE user AUTO_INCREMENT = 1;" +
+          "INSERT INTO user(id, email, password, nickname) VALUES(0, ?, ?, ?)",
+        [email, password, nickname],
+        (err, data) => {
+          if (err) console.log(err);
+          res(data);
+        }
+      );
+    });
+  };
 
-  res.send({ success: !exist, user: curUser });
+  getEmail()
+    .then((emailList) => {
+      for (const item of emailList) {
+        if (req.body.email == item.email) {
+          exist = true;
+        }
+      }
+    })
+    .then(() => {
+      if (!exist) {
+        addUser(
+          req.body.email,
+          req.body.password,
+          req.body.nickname
+        ).then((data) =>
+          res.send({ success: !exist, insertId: data[0].insertId })
+        );
+      }
+    });
 });
 
 module.exports = router;
