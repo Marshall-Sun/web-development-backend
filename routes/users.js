@@ -3,10 +3,12 @@ var router = express.Router();
 var connection = require("./mysql");
 
 router.get("/info", (req, res) => {
-  getUsers = () => {
+  const getUsers = () => {
     return new Promise((res) => {
       connection.query("SELECT * FROM user", (err, data) => {
-        if (err) console.log(err);
+        if (err) {
+          console.error(err);
+        }
         res(data);
       });
     });
@@ -15,7 +17,7 @@ router.get("/info", (req, res) => {
   getUsers().then((userList) => {
     var user;
     for (const item of userList) {
-      if (req.query.id == item.id) {
+      if (req.query.id === item.id) {
         user = item;
       }
     }

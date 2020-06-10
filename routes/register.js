@@ -5,23 +5,25 @@ var connection = require("./mysql");
 router.post("/info", (req, res) => {
   var exist = false;
 
-  getEmail = () => {
+  const getEmail = () => {
     return new Promise((res) => {
       connection.query("SELECT email FROM user", (err, data) => {
-        if (err) console.log(err);
+        if (err) console.error(err);
         res(data);
       });
     });
   };
 
-  addUser = (email, password, nickname) => {
+  const addUser = (email, password, nickname) => {
     return new Promise((res) => {
       connection.query(
         "ALTER TABLE user AUTO_INCREMENT = 1;" +
           "INSERT INTO user(id, email, password, nickname) VALUES(0, ?, ?, ?)",
         [email, password, nickname],
         (err, data) => {
-          if (err) console.log(err);
+          if (err) {
+            console.log(err);
+          }
           res(data);
         }
       );
@@ -31,7 +33,7 @@ router.post("/info", (req, res) => {
   getEmail()
     .then((emailList) => {
       for (const item of emailList) {
-        if (req.body.email == item.email) {
+        if (req.body.email === item.email) {
           exist = true;
         }
       }

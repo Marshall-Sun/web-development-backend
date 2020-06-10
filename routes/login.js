@@ -3,10 +3,12 @@ var router = express.Router();
 var connection = require("./mysql");
 
 router.post("/info", (req, res) => {
-  getUsers = () => {
+  const getUsers = () => {
     return new Promise((res) => {
       connection.query("SELECT * FROM user", (err, data) => {
-        if (err) console.log(err);
+        if (err) {
+          console.error(err);
+        }
         res(data);
       });
     });
@@ -17,14 +19,14 @@ router.post("/info", (req, res) => {
       rightPass = false,
       user;
     for (const item of userList) {
-      if (req.body.email == item.email) {
+      if (req.body.email === item.email) {
         exist = true;
-        rightPass = req.body.password == item.password;
+        rightPass = req.body.password === item.password;
         user = item;
       }
     }
 
-    res.send({ exist: exist, rightPass: rightPass, user: user });
+    res.send({ exist, rightPass, user });
   });
 });
 
