@@ -19,9 +19,11 @@ router.post("/info", (req, res) => {
       rightPass = false,
       user;
     for (const item of userList) {
-      if (req.body.email === item.email) {
+      console.log(item);
+      
+      if (req.body.email == item.email) {
         exist = true;
-        rightPass = req.body.password === item.password;
+        rightPass = req.body.password == item.password;
         user = item;
       }
     }

@@ -17,11 +17,11 @@ router.get("/info", (req, res) => {
   getUsers().then((userList) => {
     var user;
     for (const item of userList) {
-      if (req.query.id === item.id) {
+      if (req.query.id == item.id) {
         user = item;
       }
     }
-
+    
     res.send({
       id: user.id,
       email: user.email,

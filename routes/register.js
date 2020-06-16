@@ -33,7 +33,7 @@ router.post("/info", (req, res) => {
   getEmail()
     .then((emailList) => {
       for (const item of emailList) {
-        if (req.body.email === item.email) {
+        if (req.body.email == item.email) {
           exist = true;
         }
       }
