@@ -27,7 +27,9 @@ router.get("/info", (req, res) => {
       email: user.email,
       nickname: user.nickname,
       password: user.password,
-      data: user.data,
+      deptname: user.deptname,
+      shopname: user.shopname,
+      ismanager: user.ismanager,
     });
   });
 });
