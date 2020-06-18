@@ -14,23 +14,59 @@ router.get("/info", (req, res) => {
     });
   };
 
-  getUsers().then((userList) => {
-    var user;
-    for (const item of userList) {
-      if (req.query.id == item.id) {
-        user = item;
-      }
-    }
-    
-    res.send({
-      id: user.id,
-      email: user.email,
-      nickname: user.nickname,
-      password: user.password,
-      deptname: user.deptname,
-      shopname: user.shopname,
-      ismanager: user.ismanager,
+  getUsers().then((userList) => res.send(userList));
+});
+
+router.post("/update", (req, res) => {
+  const updateUser = (id, email, password, nickname, deptname, shopname) => {
+    return new Promise((res) => {
+      connection.query(
+        "UPDATE user SET " +
+          "email = ?, " +
+          "password = ?, " +
+          "nickname = ?, " +
+          "deptname = ?, " +
+          "shopname = ? " +
+          "WHERE id = ?",
+        [email, password, nickname, deptname, shopname, id],
+        (err, data) => {
+          if (err) {
+            console.log(err);
+          }
+          res(data);
+        }
+      );
     });
+  };
+
+  updateUser(
+    req.body.id,
+    req.body.email,
+    req.body.password,
+    req.body.nickname,
+    req.body.deptname,
+    req.body.shopname
+  ).then((data) => {
+    res.send({ success: data.changedRows > 0 })
+  });
+});
+
+router.post("/delete", (req, res) => {  
+  const updateUser = (id) => {
+    return new Promise((res) => {
+      connection.query(`DELETE FROM user where id=${id}`,
+        (err, data) => {
+          if (err) {
+            console.log(err);
+          }
+          res(data);
+        }
+      );
+    });
+  };
+
+  updateUser(req.body.id).then((data) => {
+    res.send({ success: data.affectedRows > 0 })
   });
 });
 
