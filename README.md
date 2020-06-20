@@ -1,7 +1,5 @@
 # Web 开发技术-作业（后端）
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5dd1deebfadf49fc9952f2f4801bc1ff)](https://www.codacy.com/manual/910204019/web-development-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Marshall-Sun/web-development-backend&amp;utm_campaign=Badge_Grade)
-
 ## 项目本地预览
 
 1. 启动[后端](https://github.com/Marshall-Sun/web-development-backend)
