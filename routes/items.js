@@ -3,9 +3,9 @@ var router = express.Router();
 var connection = require("./mysql");
 
 router.get("/info", (req, res) => {
-  const getUsers = () => {
+  const getItems = () => {
     return new Promise((res) => {
-      connection.query("SELECT * FROM user", (err, data) => {
+      connection.query("SELECT * FROM item", (err, data) => {
         if (err) {
           console.error(err);
         }
@@ -14,21 +14,20 @@ router.get("/info", (req, res) => {
     });
   };
 
-  getUsers().then((userList) => res.send(userList));
+  getItems().then((userList) => res.send(userList));
 });
 
 router.post("/update", (req, res) => {
-  const updateUser = (id, email, password, nickname, deptname, shopname) => {
+  const updateItem = (id, name, storage, price, shopname) => {
     return new Promise((res) => {
       connection.query(
-        "UPDATE user SET " +
-          "email = ?, " +
-          "password = ?, " +
-          "nickname = ?, " +
-          "deptname = ?, " +
+        "UPDATE item SET " +
+          "name = ?, " +
+          "storage = ?, " +
+          "price = ?, " +
           "shopname = ? " +
           "WHERE id = ?",
-        [email, password, nickname, deptname, shopname, id],
+        [name, storage, price, shopname, id],
         (err, data) => {
           if (err) {
             console.log(err);
@@ -39,12 +38,11 @@ router.post("/update", (req, res) => {
     });
   };
 
-  updateUser(
+  updateItem(
     req.body.id,
-    req.body.email,
-    req.body.password,
-    req.body.nickname,
-    req.body.deptname,
+    req.body.name,
+    req.body.storage,
+    req.body.price,
     req.body.shopname
   ).then((data) => {
     res.send({ success: data.changedRows > 0 })
@@ -52,9 +50,9 @@ router.post("/update", (req, res) => {
 });
 
 router.post("/delete", (req, res) => {  
-  const updateUser = (id) => {
+  const updateItem = (id) => {
     return new Promise((res) => {
-      connection.query(`DELETE FROM user where id=${id}`,
+      connection.query(`DELETE FROM item where id=${id}`,
         (err, data) => {
           if (err) {
             console.log(err);
@@ -65,7 +63,7 @@ router.post("/delete", (req, res) => {
     });
   };
 
-  updateUser(req.body.id).then((data) => {
+  updateItem(req.body.id).then((data) => {
     res.send({ success: data.affectedRows > 0 })
   });
 });

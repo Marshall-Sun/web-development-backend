@@ -14,12 +14,13 @@ router.post("/info", (req, res) => {
     });
   };
 
-  const addUser = (email, password, nickname) => {
+  const addUser = (email, password, nickname, deptname, shopname) => {
     return new Promise((res) => {
       connection.query(
         "ALTER TABLE user AUTO_INCREMENT = 1;" +
-          "INSERT INTO user(id, email, password, nickname) VALUES(0, ?, ?, ?)",
-        [email, password, nickname],
+          "INSERT INTO user(id, email, password, nickname, deptname, shopname, ismanager) " +
+          "VALUES(0, ?, ?, ?, ?, ?, 0)",
+        [email, password, nickname, deptname, shopname],
         (err, data) => {
           if (err) {
             console.log(err);
@@ -43,10 +44,14 @@ router.post("/info", (req, res) => {
         addUser(
           req.body.email,
           req.body.password,
-          req.body.nickname
+          req.body.nickname,
+          req.body.deptname,
+          req.body.shopname
         ).then((data) =>
           res.send({ success: !exist, insertId: data[0].insertId })
         );
+      } else {
+        res.send({ success: !exist });
       }
     });
 });

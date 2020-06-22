@@ -19,8 +19,6 @@ router.post("/info", (req, res) => {
       rightPass = false,
       user;
     for (const item of userList) {
-      console.log(item);
-      
       if (req.body.email == item.email) {
         exist = true;
         rightPass = req.body.password == item.password;
